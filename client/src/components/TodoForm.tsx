@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
   Collapse,
@@ -6,43 +7,43 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { useState, type SubmitEvent } from "react";
+import { useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { useCreateTodo } from "../hooks/useTodos";
+import { todoFormSchema, type TodoFormValues } from "../schemas/todo.schema";
 
 export function TodoForm() {
   const createTodo = useCreateTodo();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [titleError, setTitleError] = useState<string | null>(null);
   const [focused, setFocused] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<TodoFormValues>({
+    resolver: zodResolver(todoFormSchema),
+    defaultValues: { title: "", description: "" },
+  });
+
+  const [title, description] = useWatch({
+    control,
+    name: ["title", "description"],
+  });
   const expanded = focused || title !== "" || description !== "";
 
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!title.trim()) {
-      setTitleError("Title is required");
-      return;
-    }
-
+  const onSubmit = (values: TodoFormValues) => {
     createTodo.mutate(
-      {
-        title: title.trim(),
-        description: description.trim() || undefined,
-      },
-      {
-        onSuccess: () => {
-          setTitle("");
-          setDescription("");
-        },
-      },
+      { title: values.title, description: values.description || undefined },
+      { onSuccess: () => reset() },
     );
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
       onFocus={() => setFocused(true)}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) {
@@ -59,12 +60,8 @@ export function TodoForm() {
             aria-label="New task"
             placeholder="Add a task and press Enter"
             leftSection={<span style={{ fontSize: 22, lineHeight: 1 }}>+</span>}
-            value={title}
-            error={titleError}
-            onChange={(event) => {
-              setTitle(event.currentTarget.value);
-              setTitleError(null);
-            }}
+            error={errors.title?.message}
+            {...register("title")}
           />
           <Button
             type="submit"
@@ -82,8 +79,8 @@ export function TodoForm() {
             placeholder="Add a description (optional)"
             autosize
             minRows={2}
-            value={description}
-            onChange={(event) => setDescription(event.currentTarget.value)}
+            error={errors.description?.message}
+            {...register("description")}
           />
         </Collapse>
       </Stack>
