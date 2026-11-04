@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Group, Text } from "@mantine/core";
+import { Button, Checkbox, Group, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { motion } from "motion/react";
 import { useDeleteTodo, useToggleTodo } from "../hooks/useTodos";
@@ -12,54 +12,56 @@ export function TodoItem({ todo }: { todo: Todo }) {
     useDisclosure(false);
 
   return (
-    <motion.div
-      animate={{ opacity: todo.done ? 0.6 : 1 }}
-      whileHover={{ y: -2 }}
-      transition={{ duration: 0.2 }}
+    <Group
+      className="todo-row"
+      px="lg"
+      py="md"
+      gap="md"
+      wrap="nowrap"
+      align="center"
     >
-      <Card withBorder padding="md">
-        <Group justify="space-between" align="flex-start" wrap="nowrap">
-          <Checkbox
-            checked={todo.done}
-            disabled={toggleTodo.isPending}
-            onChange={() => toggleTodo.mutate(todo._id)}
-            label={
-              <>
-                <Text
-                  fw={500}
-                  td={todo.done ? "line-through" : undefined}
-                  c={todo.done ? "dimmed" : undefined}
-                >
-                  {todo.title}
-                </Text>
-                {todo.description && (
-                  <Text size="sm" c="dimmed">
-                    {todo.description}
-                  </Text>
-                )}
-              </>
-            }
-          />
-          <Group gap="xs" wrap="nowrap">
-            <Button variant="light" size="xs" onClick={openEdit}>
-              Edit
-            </Button>
-            <Button
-              variant="light"
-              color="red"
-              size="xs"
-              loading={deleteTodo.isPending}
-              onClick={() => deleteTodo.mutate(todo._id)}
-            >
-              Delete
-            </Button>
-          </Group>
-        </Group>
+      <Checkbox
+        size="md"
+        radius="md"
+        checked={todo.done}
+        disabled={toggleTodo.isPending}
+        onChange={() => toggleTodo.mutate(todo._id)}
+        aria-label={`Mark "${todo.title}" as ${todo.done ? "pending" : "done"}`}
+      />
 
-        {editOpened && (
-          <EditTodoModal todo={todo} opened={editOpened} onClose={closeEdit} />
+      <motion.div
+        animate={{ opacity: todo.done ? 0.55 : 1 }}
+        transition={{ duration: 0.2 }}
+        style={{ flex: 1, minWidth: 0 }}
+      >
+        <Text fz="md" td={todo.done ? "line-through" : undefined}>
+          {todo.title}
+        </Text>
+        {todo.description && (
+          <Text fz="sm" c="dimmed">
+            {todo.description}
+          </Text>
         )}
-      </Card>
-    </motion.div>
+      </motion.div>
+
+      <Group className="todo-actions" gap={4} wrap="nowrap">
+        <Button variant="subtle" size="compact-sm" onClick={openEdit}>
+          Edit
+        </Button>
+        <Button
+          variant="subtle"
+          color="red"
+          size="compact-sm"
+          loading={deleteTodo.isPending}
+          onClick={() => deleteTodo.mutate(todo._id)}
+        >
+          Delete
+        </Button>
+      </Group>
+
+      {editOpened && (
+        <EditTodoModal todo={todo} opened={editOpened} onClose={closeEdit} />
+      )}
+    </Group>
   );
 }

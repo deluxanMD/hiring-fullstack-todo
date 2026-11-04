@@ -1,4 +1,4 @@
-import { Alert, Center, Loader, Stack, Text } from "@mantine/core";
+import { Alert, Card, Center, Loader, Text } from "@mantine/core";
 import { AnimatePresence, motion } from "motion/react";
 import { useTodos } from "../hooks/useTodos";
 import type { TodoFilter } from "../types/todo";
@@ -48,21 +48,22 @@ export function TodoList({ filter }: { filter: TodoFilter }) {
   }
 
   return (
-    <Stack gap="sm">
+    <Card withBorder padding={0} radius="lg" shadow="sm">
       <AnimatePresence mode="popLayout" initial={false}>
         {todos.map((todo) => (
           <motion.div
             key={todo._id}
+            className="todo-item"
             layout
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, x: -60, scale: 0.9 }}
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, x: -60 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
             <TodoItem todo={todo} />
           </motion.div>
         ))}
       </AnimatePresence>
-    </Stack>
+    </Card>
   );
 }

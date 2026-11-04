@@ -5,3 +5,27 @@ body {
 :root[data-mantine-color-scheme="light"] body {
   background: #f5f6f8;
 }
+
+.todo-item + .todo-item {
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.todo-row:hover {
+  background: light-dark(#f8f9fb, var(--mantine-color-dark-6));
+}
+
+.todo-actions {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.todo-row:hover .todo-actions,
+.todo-actions:focus-within {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .todo-actions {
+    opacity: 1;
+  }
+}
