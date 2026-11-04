@@ -1,3 +1,7 @@
 body {
   margin: 0;
 }
+
+:root[data-mantine-color-scheme="light"] body {
+  background: #f5f6f8;
+}
