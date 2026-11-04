@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+const idParams = z.object({
+  id: z.string().regex(/^[a-f\d]{24}$/i, "Invalid todo id"),
+});
+
 const todoBody = z.object({
   title: z.string().trim().min(1, "Title is required"),
   description: z.string().trim().optional(),
@@ -10,11 +14,14 @@ export const createTodoSchema = z.object({
 });
 
 export const updateTodoSchema = z.object({
-  params: z.object({
-    id: z.string().regex(/^[a-f\d]{24}$/i, "Invalid todo id"),
-  }),
+  params: idParams,
   body: todoBody,
+});
+
+export const toggleTodoSchema = z.object({
+  params: idParams,
 });
 
 export type CreateTodoInput = z.infer<typeof createTodoSchema>;
 export type UpdateTodoInput = z.infer<typeof updateTodoSchema>;
+export type ToggleTodoInput = z.infer<typeof toggleTodoSchema>;
