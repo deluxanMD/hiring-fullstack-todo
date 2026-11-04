@@ -1,8 +1,17 @@
-import "dotenv/config";
 import { app } from "./app.js";
+import { connectDb } from "./config/db.js";
+import { env } from "./config/env.js";
 
-const port = Number(process.env.PORT) || 4000;
+async function main() {
+  await connectDb();
+  app.listen(env.PORT, () => {
+    console.log(
+      `Server listening on http://localhost:${env.PORT} (${env.NODE_ENV})`,
+    );
+  });
+}
 
-app.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
+main().catch((err) => {
+  console.error("Failed to start server:", err);
+  process.exit(1);
 });
