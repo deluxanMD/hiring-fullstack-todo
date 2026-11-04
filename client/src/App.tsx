@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import type { TodoFilter } from "./types/todo";
 import { TodoFilterBar } from "./components/TodoFilterBar";
+import { TodoFooter } from "./components/TodoFooter";
 import { TodoForm } from "./components/TodoForm";
 import { TodoHeader } from "./components/TodoHeader";
 import { TodoList } from "./components/TodoList";
@@ -23,6 +24,7 @@ function App() {
         <TodoForm />
         <TodoFilterBar value={filter} onChange={setFilter} />
         <TodoList filter={filter} />
+        <TodoFooter />
       </Stack>
     </Container>
   );

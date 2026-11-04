@@ -16,8 +16,6 @@ export function TodoForm() {
   const [titleError, setTitleError] = useState<string | null>(null);
   const [focused, setFocused] = useState(false);
 
-  // The description stays tucked away until the user starts a new task,
-  // which keeps the add bar as clean as the design.
   const expanded = focused || title !== "" || description !== "";
 
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {

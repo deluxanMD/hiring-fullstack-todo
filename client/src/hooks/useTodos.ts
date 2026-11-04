@@ -55,3 +55,35 @@ export const useToggleTodo = () => {
 export const useDeleteTodo = () => {
   return useTodoMutation(api.deleteTodo, "Todo deleted");
 };
+
+// The API has no bulk endpoint, so this sends one delete per todo.
+export const useClearCompleted = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (ids: string[]) => {
+      const results = await Promise.allSettled(ids.map(api.deleteTodo));
+      const failed = results.filter((r) => r.status === "rejected").length;
+      if (failed > 0) {
+        throw new Error(
+          `${failed} of ${ids.length} tasks could not be deleted`,
+        );
+      }
+      return ids.length;
+    },
+    onSuccess: (count) => {
+      notifications.show({
+        message: `Cleared ${count} completed ${count === 1 ? "task" : "tasks"}`,
+        color: "green",
+      });
+    },
+    onError: (error: Error) => {
+      notifications.show({
+        title: "Something went wrong",
+        message: error.message,
+        color: "red",
+      });
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: TODOS_KEY }),
+  });
+};
