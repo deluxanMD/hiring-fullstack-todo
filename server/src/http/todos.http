@@ -1,0 +1,27 @@
+GET http://localhost:4000/api/todos
+
+POST http://localhost:4000/api/todos
+Content-Type: application/json
+
+{
+  "title": "Call mom",
+  "description": "Check in with her about the weekend plans"
+}
+
+###
+
+PUT http://localhost:4000/api/todos/6aeaea3bff19294915fbf9ee
+Content-Type: application/json
+
+{
+  "title": "Buy oat milk",
+  "description": "1 litre"
+}
+
+###
+
+PATCH http://localhost:4000/api/todos/6aeaea3bff19294915fbf9ee/done
+
+###
+
+DELETE http://localhost:4000/api/todos/6aeaea3bff19294915fbf9ee
