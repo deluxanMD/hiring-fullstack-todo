@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createTodo,
+  deleteTodo,
   getTodos,
   toggleTodoDone,
   updateTodo,
@@ -8,7 +9,7 @@ import {
 import { validate } from "../middleware/validate.middleware.js";
 import {
   createTodoSchema,
-  toggleTodoSchema,
+  todoIdSchema,
   updateTodoSchema,
 } from "../validators/todo.validator.js";
 
@@ -17,4 +18,5 @@ export const todoRouter = Router();
 todoRouter.get("/", getTodos);
 todoRouter.post("/", validate(createTodoSchema), createTodo);
 todoRouter.put("/:id", validate(updateTodoSchema), updateTodo);
-todoRouter.patch("/:id/done", validate(toggleTodoSchema), toggleTodoDone);
+todoRouter.patch("/:id/done", validate(todoIdSchema), toggleTodoDone);
+todoRouter.delete("/:id", validate(todoIdSchema), deleteTodo);

@@ -18,10 +18,10 @@ export const updateTodoSchema = z.object({
   body: todoBody,
 });
 
-export const toggleTodoSchema = z.object({
+export const todoIdSchema = z.object({
   params: idParams,
 });
 
 export type CreateTodoInput = z.infer<typeof createTodoSchema>;
 export type UpdateTodoInput = z.infer<typeof updateTodoSchema>;
-export type ToggleTodoInput = z.infer<typeof toggleTodoSchema>;
+export type TodoIdInput = z.infer<typeof todoIdSchema>;

@@ -21,3 +21,7 @@ Content-Type: application/json
 ###
 
 PATCH http://localhost:4000/api/todos/6aeaea3bff19294915fbf9ee/done
+
+###
+
+DELETE http://localhost:4000/api/todos/6aeaea3bff19294915fbf9ee

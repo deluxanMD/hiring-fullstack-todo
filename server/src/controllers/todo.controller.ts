@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 import { TodoModel } from "../models/todo.model.js";
 import type {
   CreateTodoInput,
-  ToggleTodoInput,
+  TodoIdInput,
   UpdateTodoInput,
 } from "../validators/todo.validator.js";
 
@@ -34,9 +34,8 @@ export const updateTodo: RequestHandler = async (_req, res) => {
 };
 
 export const toggleTodoDone: RequestHandler = async (_req, res) => {
-  const { params } = res.locals.validated as ToggleTodoInput;
+  const { params } = res.locals.validated as TodoIdInput;
 
-  // Pipeline update flips the value atomically, avoiding a read-then-write race.
   const todo = await TodoModel.findByIdAndUpdate(
     params.id,
     [{ $set: { done: { $not: "$done" } } }],
@@ -49,4 +48,17 @@ export const toggleTodoDone: RequestHandler = async (_req, res) => {
   }
 
   res.json(todo);
+};
+
+export const deleteTodo: RequestHandler = async (_req, res) => {
+  const { params } = res.locals.validated as TodoIdInput;
+
+  const todo = await TodoModel.findByIdAndDelete(params.id);
+
+  if (!todo) {
+    res.status(404).json({ error: "Todo not found" });
+    return;
+  }
+
+  res.status(204).send();
 };
