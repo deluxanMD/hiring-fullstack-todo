@@ -1,9 +1,10 @@
-import { Button, Checkbox, Group, Text } from "@mantine/core";
+import { ActionIcon, Checkbox, Group, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { motion } from "motion/react";
 import { useDeleteTodo, useToggleTodo } from "../hooks/useTodos";
 import type { Todo } from "../types/todo";
 import { EditTodoModal } from "./EditTodoModal";
+import { PencilIcon, TrashIcon } from "./icons";
 
 export function TodoItem({ todo }: { todo: Todo }) {
   const toggleTodo = useToggleTodo();
@@ -45,18 +46,23 @@ export function TodoItem({ todo }: { todo: Todo }) {
       </motion.div>
 
       <Group className="todo-actions" gap={4} wrap="nowrap">
-        <Button variant="subtle" size="compact-sm" onClick={openEdit}>
-          Edit
-        </Button>
-        <Button
+        <ActionIcon
+          variant="subtle"
+          color="gray"
+          aria-label={`Edit "${todo.title}"`}
+          onClick={openEdit}
+        >
+          <PencilIcon />
+        </ActionIcon>
+        <ActionIcon
           variant="subtle"
           color="red"
-          size="compact-sm"
+          aria-label={`Delete "${todo.title}"`}
           loading={deleteTodo.isPending}
           onClick={() => deleteTodo.mutate(todo._id)}
         >
-          Delete
-        </Button>
+          <TrashIcon />
+        </ActionIcon>
       </Group>
 
       {editOpened && (
