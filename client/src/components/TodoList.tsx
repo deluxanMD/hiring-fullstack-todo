@@ -1,10 +1,21 @@
 import { Alert, Center, Loader, Stack, Text } from "@mantine/core";
 import { AnimatePresence, motion } from "motion/react";
 import { useTodos } from "../hooks/useTodos";
+import type { TodoFilter } from "../types/todo";
 import { TodoItem } from "./TodoItem";
 
-export function TodoList() {
-  const { data: todos, isLoading, error } = useTodos();
+const EMPTY_MESSAGES: Record<TodoFilter, string> = {
+  all: "No todos yet. Add your first one above.",
+  pending: "Nothing pending. You're all caught up!",
+  completed: "No completed tasks yet.",
+};
+
+export function TodoList({ filter }: { filter: TodoFilter }) {
+  const { data, isLoading, error } = useTodos();
+
+  const todos = data?.filter((todo) =>
+    filter === "all" ? true : filter === "completed" ? todo.done : !todo.done,
+  );
 
   if (isLoading) {
     return (
@@ -25,11 +36,12 @@ export function TodoList() {
   if (!todos?.length) {
     return (
       <motion.div
+        key={filter}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
       >
         <Text c="dimmed" ta="center" py="xl">
-          No todos yet. Add your first one above.
+          {EMPTY_MESSAGES[filter]}
         </Text>
       </motion.div>
     );

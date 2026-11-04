@@ -11,3 +11,5 @@ export interface TodoInput {
   title: string;
   description?: string;
 }
+
+export type TodoFilter = "all" | "pending" | "completed";
